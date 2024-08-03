@@ -225,9 +225,7 @@ bot.on("callback_query", async (callbackQuery) => {
   }
 });
 
-export default async function handler(req, res) {
-  const botToken = process.env.TELEGRAM_TOKEN;
-  const bot = new TelegramBot(botToken);
+export default function handler(req, res) {
   bot.processUpdate(req.body);
   res.sendStatus(200);
 }

@@ -1,15 +1,9 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "tgWeather.js",
-      "use": "@vercel/node"
-    }
+    { "src": "api/*.js", "use": "@vercel/node" }
   ],
   "routes": [
-    {
-      "src": "tgWeather.js",
-      "dest": "tgWeather.js"
-    }
+    { "src": "/api/(.*)", "dest": "/api/$1" }
   ]
 }
