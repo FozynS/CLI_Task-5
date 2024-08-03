@@ -4,6 +4,8 @@
     { "src": "api/*.js", "use": "@vercel/node" }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" }
+    { "src": "/api/tgWeather", "dest": "/api/tgWeather.js" },
+    { "src": "/api/setWebhook", "dest": "/api/setWebhook.js" },
+    { "src": "/api/(.*)", "dest": "/api/$1.js" }
   ]
 }
