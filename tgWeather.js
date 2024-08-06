@@ -148,37 +148,40 @@ bot.on("message", async (msg) => {
   const chatId = msg.chat.id;
   const text = msg.text;
 
-  if (!chatStates[chatId]) {
-    chatStates[chatId] = "main";
-  }
-
-  if (text === "Предыдущее меню") {
-    switch (chatStates[chatId]) {
-      case "city":
-        chatStates[chatId] = "main";
-        bot.sendMessage(chatId, "Выберите команду:", mainMenuKeyboard);
-        break;
-      case "interval":
-        chatStates[chatId] = "city";
-        bot.sendMessage(chatId, "Выберите команду:", citySelectionKeyboard);
-        break;
-      case "currency":
-        chatStates[chatId] = "main";
-        bot.sendMessage(chatId, "Выберите команду:", mainMenuKeyboard);
-        break;
-    
-      default:
-        chatStates[chatId] = "main";
-        bot.sendMessage(chatId, "Выберите команду:", mainMenuKeyboard);
-        break;
+  try {
+    if (!chatStates[chatId]) {
+      chatStates[chatId] = "main";
     }
-  } else if (text === "/Погода") {
+  
+    if (text === "Предыдущее меню") {
+      switch (chatStates[chatId]) {
+        case "city":
+          chatStates[chatId] = "main";
+          bot.sendMessage(chatId, "Выберите команду:", mainMenuKeyboard);
+          break;
+        case "interval":
+          chatStates[chatId] = "city";
+          bot.sendMessage(chatId, "Выберите команду:", citySelectionKeyboard);
+          break;
+        case "currency":
+          chatStates[chatId] = "main";
+          bot.sendMessage(chatId, "Выберите команду:", mainMenuKeyboard);
+          break;
+      
+        default:
+          chatStates[chatId] = "main";
+          bot.sendMessage(chatId, "Выберите команду:", mainMenuKeyboard);
+          break;
+      }
+    } else if (text === "/Погода") {
+      chatStates[chatId] = "city";
       bot.sendMessage(
         chatId,
         "Выберите город для прогноза погоды:",
         citySelectionKeyboard,
       );
     } else if (text === "/Курс валют") {
+      chatStates[chatId] = "currency";
       bot.sendMessage(
         chatId,
         "Выберите обменный курс валют.",
@@ -194,12 +197,16 @@ bot.on("message", async (msg) => {
         bot.sendMessage(chatId, formattedData, mainMenuKeyboard);
         chatStates[chatId] = 'main';
       }
-    } else if(text === "USD" || text === "EUR") {
+    } else if (text === "USD" || text === "EUR") {
       const currencyData = await getCurrencyData();
       const formattedData = formatCurrencyData(currencyData, text);
       bot.sendMessage(chatId, formattedData, mainMenuKeyboard);
       chatStates[chatId] = 'main';
-    } 
+    }
+    
+  } catch (error) {
+    console.error('Error processing message:', error);
+  }
 });
 
 bot.on("callback_query", async (callbackQuery) => {
@@ -225,7 +232,7 @@ bot.on("callback_query", async (callbackQuery) => {
   }
 });
 
-export default function handler(req, res) {
-  bot.processUpdate(req.body);
-  res.sendStatus(200);
-}
+// export default function handler(req, res) {
+//   bot.processUpdate(req.body);
+//   res.sendStatus(200);
+// }
